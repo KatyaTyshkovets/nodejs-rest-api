@@ -1,12 +1,15 @@
-const validation = (schema) => {
-    return (req, res, next) =>{
+const {requestError} = require('../helpers/requestError');
+
+const validation = schema => {
+    const func = async(req, res, next)=> {
         const {error} = schema.validate(req.body);
         if(error) {
-            error.status = 400;
-            next(error);
+            next(requestError(400, error.message))
         }
-        next();
+        next()
     }
+
+    return func;
 }
 
 module.exports = validation;
